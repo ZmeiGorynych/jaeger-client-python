@@ -14,7 +14,6 @@
 
 from six.moves import range
 
-import fcntl
 import socket
 import struct
 import time
@@ -75,11 +74,17 @@ def local_ip():
                 break
             except IOError:
                 pass
+            except Exception:
+                ip=None
+        if ip is None:
+            ip = 'Unknown IP'
+            
     return ip
 
 
 def interface_ip(interface):
     """Determine the IP assigned to us by the given network interface."""
+    import fcntl
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return socket.inet_ntoa(
         fcntl.ioctl(
